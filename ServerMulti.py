@@ -9,7 +9,7 @@ def threaded(client):
         data = client.recv(1024).decode('utf-8')
         if (not data or data == 'exit'):
             print("Fuck it, i'm out")
-            print_lock.release()
+            #print_lock.release()
             break
         print(data)
         out = "Hello i'm server"
@@ -28,7 +28,7 @@ def Main():
 
     while (True):
         client, addrs = sock.accept()
-        print_lock.acquire()
+        #print_lock.acquire()
         print("Connected to: ", addrs[0], ":", addrs[1])
 
         _thread.start_new_thread(threaded, (client,))
