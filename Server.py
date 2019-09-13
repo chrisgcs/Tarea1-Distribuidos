@@ -6,19 +6,24 @@ print_lock = threading.Lock()
 
 def threaded(client):
     while(True):
+        file = open("log.txt", "a")
         data = client.recv(1024).decode('utf-8')
-        if (not data or data == 'exit'):
-            print("Fuck it, i'm out")
+        file.write(data+"\n")
+        if (data == "I`m leaving *drops mic*"):
+            #print("Ok thank you have a nice day")
+            out = "Ok thank you have a nice day"
+            client.send(out.encode('utf-8'))
             #print_lock.release()
             break
         print(data)
         out = "Hello i'm server"
         client.send(out.encode('utf-8'))
+        file.close()
     client.close()
 
 def Main():
     host = ""
-    port = 9889
+    port = 5000
     sock = socket.socket()
     sock.bind((host, port))
     print("Binded to port ", port)
