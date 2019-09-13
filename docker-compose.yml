@@ -1,0 +1,12 @@
+version: '3'
+
+services: 
+  server:
+    build: 
+      context: ./app_server
+      dockerfile: DockerFile
+    image: windows
+    ports: 
+      - "5000:5000"
+    volumes: 
+      - .:/app_server
