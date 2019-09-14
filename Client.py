@@ -11,7 +11,7 @@ def Main():
 
         sock.send(message.encode('utf-8')) 
         data = sock.recv(1024) 
-        print('Received from the server :',str(data.decode('utf-8'))) 
+        print('Received from the server :', str(data.decode('utf-8'))) 
         ans = input('\nDo you want to continue(y/n) :') 
         if ans == 'y': 
             continue
