@@ -3,22 +3,20 @@ services:
   server:
     build:
       context: ./
-      dockerfile: server.docker
+      dockerfile: Dockerfile.server
     container_name: server
     ports:
       - 5000:5000
     volumes:
-      - .:/app
-  client:
-    stdin_open: true
-    tty: true
+      - .:/usr/src/app
+  cliente:
     build:
       context: ./
-      dockerfile: client.docker
-    container_name: client
+      dockerfile: Dockerfile.cliente
+    container_name: cliente
     ports:
-      - 5001:5001
+     - 5001:5000
     volumes:
-      - .:/app
+      - .:/usr/src/app
     depends_on:
       - server
