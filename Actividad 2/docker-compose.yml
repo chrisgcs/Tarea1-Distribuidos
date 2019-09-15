@@ -1,17 +1,44 @@
 version: '3'
-
-services: 
-  server:
-    build: .
-    volumes:
-      - ./server:/usr/src/app
+services:
+  headnode:
+    stdin_open: true
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile.headnode
+    container_name: headnode
     ports:
-      - 10000:5000
+      - 10000:10000
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - mcast-network
   node1:
-    build: .
-    volumes:
-      - ./node1:/usr/src/app
+    stdin_open: true
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile.node
+    container_name: node1
     ports:
-      - 5000:10000
-    depends_on:
-      - server
+     - 10001:10000
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - mcast-network
+  node2:
+    stdin_open: true
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile.node
+    container_name: node2
+    ports:
+     - 10002:10000
+    volumes:
+      - .:/usr/src/app
+    networks:
+      - mcast-network
+networks:
+  mcast-network:
+    driver: bridge
