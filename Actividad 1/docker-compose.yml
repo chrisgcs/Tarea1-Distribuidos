@@ -1,17 +1,24 @@
 version: '3'
-
-services: 
+services:
   server:
-    build: ./server 
-    volumes:
-      - ./server:/usr/src/app
+    build:
+      context: ./
+      dockerfile: server.docker
+    container_name: server
     ports:
-      - 10000:5000
-  node1:
-    build: ./node1
+      - 5000:5000
     volumes:
-      - ./node1:/usr/src/app
+      - .:/app
+  client:
+    stdin_open: true
+    tty: true
+    build:
+      context: ./
+      dockerfile: client.docker
+    container_name: client
     ports:
-      - 5000:10000
+      - 5001:5001
+    volumes:
+      - .:/app
     depends_on:
       - server

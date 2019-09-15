@@ -1,8 +1,8 @@
 import socket 
   
   
-def Main(): 
-    host = '127.0.0.1'
+def Main():
+    host = 'server'
     port = 5000
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
     sock.connect((host,port)) 
