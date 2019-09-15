@@ -2,16 +2,22 @@ version: '3'
 
 services: 
   server:
-    build: ./server 
-    volumes:
-      - ./server:/usr/src/app
+    build:
+      context: ./
+      dockerfile: Dockerfile.server
+    container_name: server
     ports:
-      - 10000:5000
-  node1:
-    build: ./node1
+      - 5000:5000
     volumes:
-      - ./node1:/usr/src/app
+      - .:/usr/src/app
+  cliente:
+    build:
+      context: ./
+      dockerfile: Dockerfile.cliente
+    container_name: cliente
     ports:
-      - 5000:10000
+     - 5001:5000
+    volumes:
+      - .:/usr/src/app
     depends_on:
       - server
