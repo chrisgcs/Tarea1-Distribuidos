@@ -5,6 +5,8 @@ import _thread
 print_lock = threading.Lock()
 
 def threaded(client):
+    out = "Hello i'm server"
+    client.send(out.encode('utf-8'))
     while(True):
         file = open("log.txt", "a")
         data = client.recv(1024).decode('utf-8')
@@ -16,8 +18,6 @@ def threaded(client):
             #print_lock.release()
             break
         print(data)
-        out = "Hello i'm server"
-        client.send(out.encode('utf-8'))
         file.close()
     client.close()
 
