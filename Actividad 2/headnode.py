@@ -28,6 +28,10 @@ try:
         while(True):
             try:
                 data, server = sock.recvfrom(4096)
+                alias = socket.gethostbyaddr(server[0]) #obtengo el nombre del host, ex: node1.network
+                hostip = socket.gethostbyname(alias[0]) #pruebo que efectivamente nodeX.network me de su ip
+                print(alias) #uwu
+                print(hostip) #unu
                 print('received {!r} from {}'.format(data.decode('utf-8'), server))
             except:
                 print("No more nodes sent ACK")
