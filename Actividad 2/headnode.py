@@ -10,7 +10,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 # Set a timeout so the socket does not block
 # indefinitely when trying to receive data.
-sock.settimeout(10)
+sock.settimeout(5)
 
 # Set the time-to-live for messages to 1 so they do not
 # go past the local network segment.
@@ -25,16 +25,13 @@ try:
 
         # Look for responses from all recipients
         print('waiting to receive')
-        try:
-            data, server = sock.recvfrom(4096)
-        except socket.timeout:
-            print('timed out')
-        else:
-            print('received {!r} from {}'.format(
-                data.decode('utf-8'), server))
-            sent = sock.sendto("ack".encode('utf-8'), server)
-        time.sleep(5)
-
+        while(True):
+            try:
+                data, server = sock.recvfrom(4096)
+                print('received {!r} from {}'.format(data.decode('utf-8'), server))
+            except:
+                print("No more nodes sent ACK")
+                break
 finally:
     print('closing socket')
     sock.close()

@@ -34,6 +34,6 @@ while True:
     print('sending acknowledgement to', address)
     sock.sendto('ack'.encode('utf-8'), address)
     
-    data, address = sock.recvfrom(1024)
-    if(data):
-        print("Success")
+    #data, address = sock.recvfrom(1024)
+    #if(data):
+    #    print("Success")
