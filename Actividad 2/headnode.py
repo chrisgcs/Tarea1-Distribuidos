@@ -1,6 +1,8 @@
 import socket
 import struct
 import time
+import threading
+import _thread
 
 message = 'very important data'
 multicast_group = ('224.10.10.10', 10000)

@@ -7,8 +7,7 @@ services:
     container_name: server
     ports:
       - 5000:5000
-    volumes:
-      - .:/usr/src/app
+
     networks:
       - client-server
   cliente:
@@ -20,8 +19,7 @@ services:
     container_name: cliente
     ports:
      - 5001:5000
-    volumes:
-      - .:/usr/src/app
+    
     depends_on:
       - server
     networks:
