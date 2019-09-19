@@ -53,21 +53,7 @@ services:
       - .:/usr/src/app
     networks:
       - mcast-network
-  cliente:
-    stdin_open: true
-    tty: true
-    build:
-      context: ./
-      dockerfile: Dockerfile.cliente
-    container_name: cliente
-    ports:
-     - 5001:5000
-    volumes:
-      - .:/usr/src/app
-    depends_on:
-      - server
-    networks:
-      - client-server
+  
 networks:
   mcast-network:
     driver: bridge
