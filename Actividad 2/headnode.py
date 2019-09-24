@@ -45,7 +45,10 @@ def thread_nodes():
         sock.close()
 
 def Main():
-    _thread.start_new_thread(thread_nodes)
+    _thread.start_new_thread(thread_nodes, ())
+    while True:
+        print("still alive")
+        time.sleep(5)
 
 if __name__ == '__main__':
     Main()
