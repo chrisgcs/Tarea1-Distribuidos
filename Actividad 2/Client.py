@@ -21,6 +21,12 @@ def Main():
             now = datetime.now()
             message = mensajes[i] + " " + str(now)
             sock.send(message.encode("utf-8"))
+            
+            registro_cliente = open("registro_cliente.txt","a")
+            donde = sock.recv(1024)
+            registro_cliente.write(donde.decode("utf-8"))
+            registro_cliente.close()
+
             time.sleep(5)
         # ans = input('\nDo you want to continue(y/n) :') 
         # if ans == 'y':
