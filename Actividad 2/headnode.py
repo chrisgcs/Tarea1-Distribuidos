@@ -6,7 +6,6 @@ import _thread
 from queue import Queue
 import random
 
-
 def threaded(client, msg_q, node_q):
     out = "Hello i'm server"
     client.send(out.encode('utf-8'))
@@ -33,8 +32,6 @@ def threaded(client, msg_q, node_q):
         reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n"
         client.send(reg_cli.encode("utf-8"))
 
-
-
         if (data == "I`m leaving *drops mic*"):
             #print("Ok thank you have a nice day")
             out = "Ok thank you have a nice day"
@@ -59,7 +56,10 @@ def thread_nodes(msg_q, node_q):
     # go past the local network segment.
     ttl = struct.pack('b', 1)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
+    print(socket.gethostbyname(socket.gethostname()))
 
+    sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_IF, socket.inet_aton("172.18.18.2"))
+    #AQUI LE DEFINO LA INTERFAZ QUE QUIERO PARA LOS NODOS
     try:
         while True:
             # Send data to the multicast group
@@ -92,6 +92,7 @@ def Main():
 
     host = ""
     port = 5000
+    print(socket.gethostbyname(socket.gethostname()))
     sock = socket.socket()
     sock.bind((host, port))
     print("Binded to port ", port)
@@ -103,7 +104,6 @@ def Main():
         client, addrs = sock.accept()
         #print_lock.acquire()
         print("Connected to: ", addrs[0], ":", addrs[1])
-
         _thread.start_new_thread(threaded, (client, msg_q, node_q, ) )
     sock.close()
 

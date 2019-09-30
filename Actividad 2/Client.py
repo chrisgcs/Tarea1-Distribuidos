@@ -4,7 +4,7 @@ import time
   
   
 def Main():
-    host = 'headnode'
+    host = 'headnode.actividad2_client-server'
     port = 5000
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
     sock.connect((host,port)) 
