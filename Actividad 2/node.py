@@ -17,24 +17,6 @@ def threaded(client, msg_q, node_q):
 
         succes = "registro correcto"
         client.send(succes.encode("utf-8"))
-        
-        
-        # data = sock.recv(1024)
-        # if data.decode("utf-8") == "registro correcto":
-        #     data_file = open("data.txt","a")
-        #     registro.write(data.decode("utf-8") )
-        #     registro.close()
-        
-        # reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito "]\n"
-        # client.send(reg_cli.encode("utf-8"))
-
-        # if (data == "I`m leaving *drops mic*"):
-        #     #print("Ok thank you have a nice day")
-        #     out = "Ok thank you have a nice day"
-        #     #client.send(out.encode('utf-8'))
-        #     #print_lock.release()
-        #     break
-        # print(data)
     client.close()
 
 def thread_nodes():

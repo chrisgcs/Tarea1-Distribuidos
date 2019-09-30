@@ -10,10 +10,12 @@ services:
     ports:
       - 10000:10000
       - 5000:5000
+      - 6000:6000
     volumes:
       - .:/usr/src/app
     networks:
       - mcast-network
+      - client-server
   node1:
     stdin_open: true
     tty: true
@@ -23,6 +25,7 @@ services:
     container_name: node1
     ports:
      - 10001:10000
+     - 6001:6000
     volumes:
       - .:/usr/src/app
     networks:
@@ -36,6 +39,7 @@ services:
     container_name: node2
     ports:
      - 10002:10000
+     - 6002:6000
     volumes:
       - .:/usr/src/app
     networks:
@@ -49,11 +53,28 @@ services:
     container_name: node3
     ports:
      - 10003:10000
+     - 6003:6000
     volumes:
       - .:/usr/src/app
     networks:
       - mcast-network
+  cliente:
+    stdin_open: true
+    tty: true
+    build:
+      context: ./
+      dockerfile: Dockerfile.cliente
+    container_name: cliente
+    ports:
+     - 5001:5000
+    
+    depends_on:
+      - headnode
+    networks:
+      - client-server
   
 networks:
   mcast-network:
+    driver: bridge
+  client-server:
     driver: bridge

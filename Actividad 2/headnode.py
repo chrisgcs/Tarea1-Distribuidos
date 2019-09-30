@@ -27,10 +27,10 @@ def threaded(client, msg_q, node_q):
         data = sock.recv(1024)
         if data.decode("utf-8") == "registro correcto":
             registro = open("registro_server.txt","a")
-            registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito "]\n" )
+            registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n" )
             registro.close()
         
-        reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito "]\n"
+        reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n"
         client.send(reg_cli.encode("utf-8"))
 
 
@@ -75,6 +75,7 @@ def thread_nodes(msg_q, node_q):
                     hostip = socket.gethostbyname(alias[0]) #pruebo que efectivamente nodeX.network me de su ip
                     print(alias) #uwu
                     print(hostip) #unu
+                    node_q.put(alias)
                     print('received {!r} from {}'.format(data.decode('utf-8'), server))
                 except:
                     print("No more nodes sent ACK")
