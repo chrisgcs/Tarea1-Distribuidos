@@ -14,7 +14,10 @@ services:
     volumes:
       - .:/usr/src/app
     networks:
-      - mcast-network
+      mcast-network:
+       ipv4_address: 172.18.18.2
+      client-server:
+       ipv4_address: 172.24.24.2
   node1:
     stdin_open: true
     tty: true
@@ -28,7 +31,8 @@ services:
     volumes:
       - .:/usr/src/app
     networks:
-      - mcast-network
+      mcast-network:
+       ipv4_address: 172.18.18.3
   node2:
     stdin_open: true
     tty: true
@@ -42,7 +46,8 @@ services:
     volumes:
       - .:/usr/src/app
     networks:
-      - mcast-network
+      mcast-network:
+       ipv4_address: 172.18.18.4
   node3:
     stdin_open: true
     tty: true
@@ -56,7 +61,8 @@ services:
     volumes:
       - .:/usr/src/app
     networks:
-      - mcast-network
+      mcast-network:
+       ipv4_address: 172.18.18.5
   cliente:
     stdin_open: true
     tty: true
@@ -71,8 +77,19 @@ services:
     depends_on:
       - headnode
     networks:
-      - mcast-network
+      client-server:
+       ipv4_address: 172.24.24.3
   
 networks:
   mcast-network:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.18.0/24
+  client-server:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.24.24.0/24

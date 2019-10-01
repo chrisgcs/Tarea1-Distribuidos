@@ -43,7 +43,7 @@ def thread_nodes():
 
     # Tell the operating system to add the socket to
     # the multicast group on all interfaces.
-    group = socket.inet_aton(multicast_group)
+    group = socket.inet_aton(multicast_group)+socket.inet_aton("172.18.18.1") #Recibe de esta interfaz
     mreq = struct.pack('4sL', group, socket.INADDR_ANY)
     sock.setsockopt(
         socket.IPPROTO_IP,
