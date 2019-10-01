@@ -11,7 +11,8 @@ def threaded(client, msg_q, node_q):
     saludo = client.recv(1024)
     print(saludo.decode("utf-8"))
     client.send(out.encode('utf-8'))
-    while(True):
+    continuar = True
+    while(continuar):
         
         nodos = []
         flag = True
@@ -20,22 +21,18 @@ def threaded(client, msg_q, node_q):
         heartbeat = msg_q.get()
         print(heartbeat)
 
-        heartbeat_server = open("heartbeat_server.txt","a")
+        # heartbeat_server = open("heartbeat_server.txt","a")
         while not node_q.empty() : 
             node = node_q.get()[0]
 
-            heartbeat_server.write("respondio: " + node + "\n")
+            # heartbeat_server.write("respondio: " + node + "\n")
 
             try:
                 print("Nodo agregado = " + node)
             except Exception as exc:
                 print(exc)
             
-            nodos.append(node)
-
-        heartbeat_server.close()
-        print(len(nodos))
-        
+            nodos.append(node)        
 
         if len(nodos) != 0:
             aviso = "send messages"
@@ -64,9 +61,10 @@ def threaded(client, msg_q, node_q):
 
             if (data == "I`m leaving *drops mic*"):
                 #print("Ok thank you have a nice day")
-                out = "Ok thank you have a nice day"
-                client.send(out.encode('utf-8'))
+                # out = "Ok thank you have a nice day"
+                # client.send(out.encode('utf-8'))
                 #print_lock.release()
+                continuar = False
                 break
             print(data)
             # sock.close()
@@ -104,6 +102,7 @@ def thread_nodes(msg_q, node_q):
 
             # Look for responses from all recipients
             print('waiting to receive')
+            lista = []
             while(True):
                 try:
                     data, server = sock.recvfrom(4096)
@@ -112,6 +111,7 @@ def thread_nodes(msg_q, node_q):
                     print(alias) #uwu
                     print(hostip) #unu
                     node_q.put(alias)
+                    lista.append(alias[0])
                     
 
                     print('received {!r} from {}'.format(data.decode('utf-8'), server))
@@ -119,6 +119,10 @@ def thread_nodes(msg_q, node_q):
                     print("No more nodes sent ACK")
                     break
             msg_q.put("heartbeat done")
+            heartbeat_server = open("heartbeat_server.txt","a")
+            for i in lista:
+                heartbeat_server.write("respondio: " + i + "\n")
+            heartbeat_server.close()
     finally:
         print('closing socket')
         sock.close()
