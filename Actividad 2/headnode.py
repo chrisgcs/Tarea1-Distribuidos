@@ -9,39 +9,72 @@ import random
 
 def threaded(client, msg_q, node_q):
     out = "Hello i'm server"
+    saludo = client.recv(1024)
+    print(saludo.decode("utf-8"))
     client.send(out.encode('utf-8'))
     while(True):
-        data = client.recv(1024).decode('utf-8')
+        
         nodos = []
+        flag = True
+        while flag:
+            flag = msg_q.empty() #si deja de estar vacio es porque termino el heartbeat
+        heartbeat = msg_q.get()
+        print(heartbeat)
+
+        heartbeat_server = open("heartbeat_server.txt","a")
         while not node_q.empty() : 
-            nodos.append(node_q.get())
-        nodito = nodos[random.randint(0, len(nodos))]
+            node = node_q.get()[0]
 
-        message = data
-        sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
+            heartbeat_server.write("respondio: " + node + "\n")
 
-        sock.connect((nodito, 6000))  ###################################
-        # hay que ver bien el tema de cual puerto se usara para evitar conflictos
-        sock.send(message.encode('utf-8'))
+            try:
+                print("Nodo agregado = " + node)
+            except Exception as exc:
+                print(exc)
+            
+            nodos.append(node)
+
+        heartbeat_server.close()
+        print(len(nodos))
         
-        data = sock.recv(1024)
-        if data.decode("utf-8") == "registro correcto":
-            registro = open("registro_server.txt","a")
-            registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n" )
-            registro.close()
-        
-        reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n"
-        client.send(reg_cli.encode("utf-8"))
+
+        if len(nodos) != 0:
+            aviso = "send messages"
+            client.send(aviso.encode("utf-8")) #ya puedes mandar los mensajes
+
+            data = client.recv(1024).decode('utf-8') #escuchando mensajes
+            nodito = nodos[random.randint(0, len(nodos))-1] #nodo random
+
+            message = data
+            sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
+
+            sock.connect((nodito, 6000))  
+            
+            sock.send(message.encode('utf-8'))
+            
+            info = sock.recv(1024)
+            if info.decode("utf-8") == "registro correcto":
+                registro = open("registro_server.txt","a")
+                registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n" )
+                registro.close()
+            
+            reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n"
+            client.send(reg_cli.encode("utf-8"))
 
 
 
-        if (data == "I`m leaving *drops mic*"):
-            #print("Ok thank you have a nice day")
-            out = "Ok thank you have a nice day"
-            client.send(out.encode('utf-8'))
-            #print_lock.release()
-            break
-        print(data)
+            if (data == "I`m leaving *drops mic*"):
+                #print("Ok thank you have a nice day")
+                out = "Ok thank you have a nice day"
+                client.send(out.encode('utf-8'))
+                #print_lock.release()
+                break
+            print(data)
+            # sock.close()
+        else:
+            aviso = "servicio no disponible, intente en un rato"
+            client.send(aviso.encode("utf-8"))
+
     client.close()
 
 def thread_nodes(msg_q, node_q):
@@ -64,6 +97,7 @@ def thread_nodes(msg_q, node_q):
         while True:
             # Send data to the multicast group
             print('sending {!r}'.format(message))
+            # with node_q.mutex: node_q.queue.clear()
             sent = sock.sendto(message.encode('utf-8'), multicast_group)
 
             # Look for responses from all recipients
@@ -76,10 +110,13 @@ def thread_nodes(msg_q, node_q):
                     print(alias) #uwu
                     print(hostip) #unu
                     node_q.put(alias)
+                    
+
                     print('received {!r} from {}'.format(data.decode('utf-8'), server))
                 except:
                     print("No more nodes sent ACK")
                     break
+            msg_q.put("heartbeat done")
     finally:
         print('closing socket')
         sock.close()

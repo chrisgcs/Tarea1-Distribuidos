@@ -15,7 +15,6 @@ services:
       - .:/usr/src/app
     networks:
       - mcast-network
-      - client-server
   node1:
     stdin_open: true
     tty: true
@@ -67,14 +66,13 @@ services:
     container_name: cliente
     ports:
      - 5001:5000
-    
+    volumes:
+      - .:/usr/src/app
     depends_on:
       - headnode
     networks:
-      - client-server
+      - mcast-network
   
 networks:
   mcast-network:
-    driver: bridge
-  client-server:
     driver: bridge

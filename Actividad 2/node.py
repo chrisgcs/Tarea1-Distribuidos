@@ -6,17 +6,27 @@ import threading
 import _thread
 
 
-def threaded(client, msg_q, node_q):
+def threaded(client):
     # out = "Hello i'm nodito" ###editar para que le diga el alias del nodo
     # client.send(out.encode('utf-8'))
-    while(True):
-        data = client.recv(1024).decode('utf-8')
-        data_file = open("data.txt","a")
-        data_file.write(data.decode("utf-8") )
-        data_file.close()
+    # while(True):
+    data = client.recv(1024).decode('utf-8')
+    data_file = open("data.txt","a")
+    print(data)
+    data_file.write("%s\n" % data)
+    data_file.close()
 
-        succes = "registro correcto"
-        client.send(succes.encode("utf-8"))
+    succes = "registro correcto"
+    try:
+        client.send(succes.encode('utf-8'))
+    except socket.error as e:
+        print(e)
+    except IOError as e:
+        if e.errno == errno.EPIPE:
+            print(e)
+        else:
+            print("not EPIPE")
+            # Other error
     client.close()
 
 def thread_nodes():
@@ -73,7 +83,7 @@ def Main():
         #print_lock.acquire()
         print("Connected to: ", addrs[0], ":", addrs[1])
 
-        _thread.start_new_thread(threaded, (client, msg_q, node_q, ) )
+        _thread.start_new_thread(threaded, (client, ) )
     sock.close()
 
 if __name__ == '__main__':

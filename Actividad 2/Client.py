@@ -11,33 +11,38 @@ def Main():
     message = "Hello i'm client"
     mensajes = ["I'm still", "standing", "yeah", "yeah", "yeah"]
     while True: 
-        resp = open("respuestas.txt", "a")
         sock.send(message.encode('utf-8')) 
         data = sock.recv(1024)
-        resp.write(data.decode('utf-8') + "\n")
-        resp.close()
+
         print('Received from the server :',str(data.decode('utf-8'))) 
+        flag = True
+        while flag :
+            aviso = sock.recv(1024)
+            if aviso.decode("utf-8") == "send messages":
+                flag = False
+            else:
+                time.sleep(6)
         for i in range(5):
             now = datetime.now()
             message = mensajes[i] + " " + str(now)
             sock.send(message.encode("utf-8"))
             
+            donde = sock.recv(1024).decode("utf-8")
+            if donde == "send messages":
+                donde = sock.recv(1024).decode("utf-8")
+            print(donde)
             registro_cliente = open("registro_cliente.txt","a")
-            donde = sock.recv(1024)
-            registro_cliente.write(donde.decode("utf-8"))
+            registro_cliente.write(donde)
             registro_cliente.close()
 
             time.sleep(5)
-        # ans = input('\nDo you want to continue(y/n) :') 
-        # if ans == 'y':
-        #     continue
-        # else:
+        
         message = "I`m leaving *drops mic*"
         sock.send(message.encode('utf-8'))
-        resp = open("respuestas.txt", "a")
         data = sock.recv(1024)
-        resp.write(data.decode('utf-8') + "\n")
-        resp.close()
+        if data == "send messages":
+            data = sock.recv(1024)
+        print(data)
         break
     sock.close() 
   
