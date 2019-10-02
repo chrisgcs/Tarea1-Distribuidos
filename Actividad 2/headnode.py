@@ -125,9 +125,10 @@ def thread_nodes(msg_q, node_q):
                 if i in lista_nodes:
                     lista_nodes.remove(i)
                 heartbeat_server.write("respondio: " + i + "\n")
-            heartbeat_server.close()
+            
             for j in lista_nodes:
                 heartbeat_server.write("no respondio:"+j+" \n")
+            heartbeat_server.close()
     finally:
         print('closing socket')
         sock.close()
