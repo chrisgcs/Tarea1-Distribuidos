@@ -28,7 +28,7 @@ def Main():
         # else:
         message = "I`m leaving *drops mic*"
         sock.send(message.encode('utf-8'))
-        resp = open("respuestas.txt", "a")
+        resp = open(r"/usr/src/app/cliente/respuestas.txt", "a")
         data = sock.recv(1024)
         resp.write(data.decode('utf-8') + "\n")
         resp.close()

@@ -59,7 +59,7 @@ def threaded(client, msg_q, node_q):
             
             info = sock.recv(1024)
             if info.decode("utf-8") == "registro correcto":
-                registro = open(r"/usr/src/app/registro_server.txt","a")
+                registro = open(r"/usr/src/app/server/registro_server.txt","a")
                 registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n" )
                 registro.close()
             
@@ -76,7 +76,7 @@ def threaded(client, msg_q, node_q):
 def thread_nodes(msg_q, node_q):
     message = 'very important data'
     multicast_group = ('224.10.10.10', 10000)
-
+    
     # Create the datagram socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -102,6 +102,8 @@ def thread_nodes(msg_q, node_q):
             # Look for responses from all recipients
             print('waiting to receive')
             lista = []
+            lista_nodes = ["node1.actividad2_mcast-network","node2.actividad2_mcast-network","node3.actividad2_mcast-network"]
+
             while(True):
                 try:
                     data, server = sock.recvfrom(4096)
@@ -118,10 +120,14 @@ def thread_nodes(msg_q, node_q):
                     print("No more nodes sent ACK")
                     break
             msg_q.put("heartbeat done")
-            heartbeat_server = open(r"/usr/src/app/heartbeat_server.txt","a")
+            heartbeat_server = open(r"/usr/src/app/server/heartbeat_server.txt","a")
             for i in lista:
+                if i in lista_nodes:
+                    lista_nodes.remove(i)
                 heartbeat_server.write("respondio: " + i + "\n")
             heartbeat_server.close()
+            for j in lista_nodes:
+                heartbeat_server.write("no respondio:"+j+" \n")
     finally:
         print('closing socket')
         sock.close()
@@ -129,8 +135,9 @@ def thread_nodes(msg_q, node_q):
 def Main():
     msg_q = Queue()
     node_q = Queue()
+    not_resp_q = Queue()
 
-    _thread.start_new_thread(thread_nodes, (msg_q, node_q, ) )
+    _thread.start_new_thread(thread_nodes, (msg_q, node_q,) )
 
     host = ""
     port = 5000
