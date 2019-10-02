@@ -11,7 +11,7 @@ def threaded(client):
     # client.send(out.encode('utf-8'))
     # while(True):
     data = client.recv(1024).decode('utf-8')
-    data_file = open("node1/data.txt","a")
+    data_file = open(r"/usr/src/app/node1/data.txt","a")
     print(data)
     data_file.write("%s\n" % data)
     data_file.close()

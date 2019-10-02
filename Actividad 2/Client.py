@@ -31,7 +31,7 @@ def Main():
             if donde == "send messages":
                 donde = sock.recv(1024).decode("utf-8")
             print(donde)
-            registro_cliente = open("registro_cliente.txt","a")
+            registro_cliente = open(r"/usr/src/app/registro_cliente.txt","a")
             registro_cliente.write(donde)
             registro_cliente.close()
 

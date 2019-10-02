@@ -59,7 +59,7 @@ def threaded(client, msg_q, node_q):
             
             info = sock.recv(1024)
             if info.decode("utf-8") == "registro correcto":
-                registro = open("registro_server.txt","a")
+                registro = open(r"/usr/src/app/registro_server.txt","a")
                 registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n" )
                 registro.close()
             
@@ -118,7 +118,7 @@ def thread_nodes(msg_q, node_q):
                     print("No more nodes sent ACK")
                     break
             msg_q.put("heartbeat done")
-            heartbeat_server = open("heartbeat_server.txt","a")
+            heartbeat_server = open(r"/usr/src/app/heartbeat_server.txt","a")
             for i in lista:
                 heartbeat_server.write("respondio: " + i + "\n")
             heartbeat_server.close()
