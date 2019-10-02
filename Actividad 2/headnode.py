@@ -39,7 +39,7 @@ def threaded(client, msg_q, node_q):
             client.send(aviso.encode("utf-8")) #ya puedes mandar los mensajes
 
             data = client.recv(1024).decode('utf-8') #escuchando mensajes
-            nodito = nodos[random.randint(0, len(nodos))-1] #nodo random
+            nodito = nodos[random.randint(0, len(nodos)-1)] #nodo random
 
             if (data == "I`m leaving *drops mic*"):
                 #print("Ok thank you have a nice day")
