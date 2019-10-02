@@ -41,6 +41,15 @@ def threaded(client, msg_q, node_q):
             data = client.recv(1024).decode('utf-8') #escuchando mensajes
             nodito = nodos[random.randint(0, len(nodos))-1] #nodo random
 
+            if (data == "I`m leaving *drops mic*"):
+                #print("Ok thank you have a nice day")
+                # out = "Ok thank you have a nice day"
+                # client.send(out.encode('utf-8'))
+                #print_lock.release()
+                continuar = False
+                break
+            print(data)
+
             message = data
             sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
 
@@ -57,16 +66,6 @@ def threaded(client, msg_q, node_q):
             reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n"
             client.send(reg_cli.encode("utf-8"))
 
-
-
-            if (data == "I`m leaving *drops mic*"):
-                #print("Ok thank you have a nice day")
-                # out = "Ok thank you have a nice day"
-                # client.send(out.encode('utf-8'))
-                #print_lock.release()
-                continuar = False
-                break
-            print(data)
             # sock.close()
         else:
             aviso = "servicio no disponible, intente en un rato"

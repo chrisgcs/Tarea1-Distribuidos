@@ -1,5 +1,0 @@
-El mensaje: [I'm still 2019-10-01 02:40:42.332208] se encuentra en el nodo: [node3.actividad2_mcast-network]
-El mensaje: [standing 2019-10-01 02:40:47.412685] se encuentra en el nodo: [node1.actividad2_mcast-network]
-El mensaje: [yeah 2019-10-01 02:40:52.451180] se encuentra en el nodo: [node3.actividad2_mcast-network]
-El mensaje: [yeah 2019-10-01 02:40:57.481876] se encuentra en el nodo: [node2.actividad2_mcast-network]
-El mensaje: [yeah 2019-10-01 02:41:02.521231] se encuentra en el nodo: [node1.actividad2_mcast-network]

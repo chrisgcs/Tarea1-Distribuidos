@@ -22,7 +22,7 @@ def threaded(client):
     except socket.error as e:
         print(e)
     except IOError as e:
-        if e.errno == errno.EPIPE:
+        if e == EPIPE:
             print(e)
         else:
             print("not EPIPE")
