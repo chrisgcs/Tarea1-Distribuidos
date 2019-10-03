@@ -8,7 +8,7 @@ def threaded(client):
     out = "Hello i'm server"
     client.send(out.encode('utf-8'))
     while(True):
-        file = open("log.txt", "a")
+        file = open(r"/usr/src/app/server/log.txt", "a")
         data = client.recv(1024).decode('utf-8')
         file.write(data+"\n")
         if (data == "I`m leaving *drops mic*"):

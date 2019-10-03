@@ -55,7 +55,7 @@ def threaded(client, msg_q, node_q):
             
             info = sock.recv(1024)
             if info.decode("utf-8") == "registro correcto":
-                registro = open(r"/usr/src/app/registro_server.txt","a")
+                registro = open(r"/usr/src/app/server/registro_server.txt","a")
                 registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n" )
                 registro.close()
             
@@ -93,6 +93,8 @@ def thread_nodes(msg_q, node_q):
             # Espera a recibir los "ack" de los nodos disponibles
             print('Esperando acks')
             lista = []
+            lista_nodes = ["node1.actividad2_mcast-network","node2.actividad2_mcast-network","node3.actividad2_mcast-network"]
+
             while(True):
                 try:
                     data, server = sock.recvfrom(4096)
@@ -106,10 +108,15 @@ def thread_nodes(msg_q, node_q):
                 except:
                     print("Ningun otro nodo respondio con ACK")
                     break
-            msg_q.put("Pulso completo")
-            heartbeat_server = open(r"/usr/src/app/heartbeat_server.txt","a")
+            msg_q.put("Pulso Completo")
+            heartbeat_server = open(r"/usr/src/app/server/heartbeat_server.txt","a")
             for i in lista:
+                if i in lista_nodes:
+                    lista_nodes.remove(i)
                 heartbeat_server.write("Respondio: " + i + "\n")
+            
+            for j in lista_nodes:
+                heartbeat_server.write("no respondio:"+j+" \n")
             heartbeat_server.close()
     finally:
         print('Cerrando socket')
@@ -118,8 +125,9 @@ def thread_nodes(msg_q, node_q):
 def Main():
     msg_q = Queue()
     node_q = Queue()
+    not_resp_q = Queue()
 
-    _thread.start_new_thread(thread_nodes, (msg_q, node_q, ) )
+    _thread.start_new_thread(thread_nodes, (msg_q, node_q,) )
 
     host = ""
     port = 5000
