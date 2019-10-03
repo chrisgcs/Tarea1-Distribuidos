@@ -46,10 +46,6 @@ def thread_nodes(): #Funcion que maneja el thread encargado de responder al hear
         print('\nwaiting to receive message')
         data, address = sock.recvfrom(1024)
 
-        print('received {} bytes from {}'.format(
-            len(data), address))
-        print(data.decode('utf-8'))
-
         print('sending acknowledgement to', address)
         sock.sendto('ack'.encode('utf-8'), address)
 

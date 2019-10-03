@@ -54,7 +54,7 @@ def threaded(client, msg_q, node_q):
             sock.send(message.encode('utf-8'))
             
             info = sock.recv(1024)
-            if info.decode("utf-8") == "registro correcto":
+            if info.decode("utf-8") == "Registro correcto":
                 registro = open(r"/usr/src/app/server/registro_server.txt","a")
                 registro.write("El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n" )
                 registro.close()
@@ -80,7 +80,6 @@ def thread_nodes(msg_q, node_q):
     # Se define el tiempo de vida (time to live) del segmento para que no salte de la red local
     ttl = struct.pack('b', 1)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
-    print(socket.gethostbyname(socket.gethostname()))
 
     sock.setsockopt(socket.SOL_IP, socket.IP_MULTICAST_IF, socket.inet_aton("172.18.18.2"))
     #AQUI LE DEFINO LA INTERFAZ QUE QUIERO PARA LOS NODOS
