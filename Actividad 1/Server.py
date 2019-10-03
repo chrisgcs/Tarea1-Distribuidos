@@ -12,10 +12,8 @@ def threaded(client):
         data = client.recv(1024).decode('utf-8')
         file.write(data+"\n")
         if (data == "I`m leaving *drops mic*"):
-            #print("Ok thank you have a nice day")
             out = "Ok thank you have a nice day"
             client.send(out.encode('utf-8'))
-            #print_lock.release()
             break
         print(data)
         file.close()
@@ -33,7 +31,6 @@ def Main():
 
     while (True):
         client, addrs = sock.accept()
-        #print_lock.acquire()
         print("Connected to: ", addrs[0], ":", addrs[1])
 
         _thread.start_new_thread(threaded, (client,))

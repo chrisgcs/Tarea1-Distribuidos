@@ -6,7 +6,7 @@ services:
       dockerfile: Server.Ubuntu
     container_name: server
     ports:
-      - 5000:5000
+      - 8000:5000
     volumes:
       - .:/usr/src/app
     networks:
@@ -17,9 +17,9 @@ services:
     build:
       context: ./
       dockerfile: Cliente.Ubuntu
-    container_name: cliente
+    container_name: cliente_act1
     ports:
-     - 5001:5000
+     - 8001:5000
     depends_on:
       - server
     volumes:
