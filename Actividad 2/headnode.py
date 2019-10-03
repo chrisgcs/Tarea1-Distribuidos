@@ -7,7 +7,7 @@ from queue import Queue
 import random
 
 def threaded(client, msg_q, node_q):
-    out = "Hello i'm server"
+    out = "Hola, soy el servidor"
     saludo = client.recv(1024)
     print(saludo.decode("utf-8"))
     client.send(out.encode('utf-8'))
@@ -41,11 +41,7 @@ def threaded(client, msg_q, node_q):
             data = client.recv(1024).decode('utf-8') #escuchando mensajes
             nodito = nodos[random.randint(0, len(nodos)-1)] #nodo random
 
-            if (data == "I`m leaving *drops mic*"):
-                #print("Ok thank you have a nice day")
-                # out = "Ok thank you have a nice day"
-                # client.send(out.encode('utf-8'))
-                #print_lock.release()
+            if (data == "Adios"):
                 continuar = False
                 break
             print(data)
@@ -65,27 +61,23 @@ def threaded(client, msg_q, node_q):
             
             reg_cli = "El mensaje: [" + message + "] se encuentra en el nodo: [" + nodito + "]\n"
             client.send(reg_cli.encode("utf-8"))
-
-            # sock.close()
         else:
-            aviso = "servicio no disponible, intente en un rato"
+            aviso = "Servicio no disponible, intente en un rato"
             client.send(aviso.encode("utf-8"))
 
     client.close()
 
 def thread_nodes(msg_q, node_q):
-    message = 'very important data'
+    message = 'Heartbeat data'
     multicast_group = ('224.10.10.10', 10000)
 
-    # Create the datagram socket
+    #Crear el socket datagram
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-    # Set a timeout so the socket does not block
-    # indefinitely when trying to receive data.
+    # Definir el timeout, el cual sera utilizado para implementar el heartbeat
     sock.settimeout(5)
 
-    # Set the time-to-live for messages to 1 so they do not
-    # go past the local network segment.
+    # Se define el tiempo de vida (time to live) del segmento para que no salte de la red local
     ttl = struct.pack('b', 1)
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, ttl)
     print(socket.gethostbyname(socket.gethostname()))
@@ -94,36 +86,33 @@ def thread_nodes(msg_q, node_q):
     #AQUI LE DEFINO LA INTERFAZ QUE QUIERO PARA LOS NODOS
     try:
         while True:
-            # Send data to the multicast group
-            print('sending {!r}'.format(message))
-            # with node_q.mutex: node_q.queue.clear()
+            # Envia datos a los nodos en el grupo multicast
+            print('Enviando {!r}'.format(message))
             sent = sock.sendto(message.encode('utf-8'), multicast_group)
 
-            # Look for responses from all recipients
-            print('waiting to receive')
+            # Espera a recibir los "ack" de los nodos disponibles
+            print('Esperando acks')
             lista = []
             while(True):
                 try:
                     data, server = sock.recvfrom(4096)
                     alias = socket.gethostbyaddr(server[0]) #obtengo el nombre del host, ex: node1.network
                     hostip = socket.gethostbyname(alias[0]) #pruebo que efectivamente nodeX.network me de su ip
-                    print(alias) #uwu
-                    print(hostip) #unu
                     node_q.put(alias)
                     lista.append(alias[0])
                     
 
-                    print('received {!r} from {}'.format(data.decode('utf-8'), server))
+                    print('Recibidos {!r} desde {}'.format(data.decode('utf-8'), server))
                 except:
-                    print("No more nodes sent ACK")
+                    print("Ningun otro nodo respondio con ACK")
                     break
-            msg_q.put("heartbeat done")
+            msg_q.put("Pulso completo")
             heartbeat_server = open(r"/usr/src/app/heartbeat_server.txt","a")
             for i in lista:
-                heartbeat_server.write("respondio: " + i + "\n")
+                heartbeat_server.write("Respondio: " + i + "\n")
             heartbeat_server.close()
     finally:
-        print('closing socket')
+        print('Cerrando socket')
         sock.close()
 
 def Main():
@@ -137,15 +126,14 @@ def Main():
     print(socket.gethostbyname(socket.gethostname()))
     sock = socket.socket()
     sock.bind((host, port))
-    print("Binded to port ", port)
+    print("Puerto asignado ", port)
 
     sock.listen(5)
-    print("Socket Listening")
+    print("Socket Escuchando")
 
     while True:
         client, addrs = sock.accept()
-        #print_lock.acquire()
-        print("Connected to: ", addrs[0], ":", addrs[1])
+        print("Conectado a: ", addrs[0], ":", addrs[1])
         _thread.start_new_thread(threaded, (client, msg_q, node_q, ) )
     sock.close()
 

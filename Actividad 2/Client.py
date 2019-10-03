@@ -8,13 +8,13 @@ def Main():
     port = 5000
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) 
     sock.connect((host,port)) 
-    message = "Hello i'm client"
-    mensajes = ["I'm still", "standing", "yeah", "yeah", "yeah"]
+    message = "Hola, soy un cliente"
+    mensajes = ["Mensaje1", "Mensaje2", "Mensaje3", "Mensaje4", "Mensaje5"]
     while True: 
         sock.send(message.encode('utf-8')) 
         data = sock.recv(1024)
 
-        print('Received from the server :',str(data.decode('utf-8'))) 
+        print('Recibido desde el servidor :',str(data.decode('utf-8'))) 
         flag = True
         while flag :
             aviso = sock.recv(1024)
@@ -37,7 +37,7 @@ def Main():
 
             time.sleep(5)
         
-        message = "I`m leaving *drops mic*"
+        message = "Adios"
         sock.send(message.encode('utf-8'))
         data = sock.recv(1024)
         if data == "send messages":

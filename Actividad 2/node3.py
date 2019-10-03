@@ -6,17 +6,14 @@ import threading
 import _thread
 
 
-def threaded(client):
-    # out = "Hello i'm nodito" ###editar para que le diga el alias del nodo
-    # client.send(out.encode('utf-8'))
-    # while(True):
+def threaded(client): #Funcion que maneja el thread donde se registran los mensajes del cliente
     data = client.recv(1024).decode('utf-8')
     data_file = open(r"/usr/src/app/node3/data.txt","a")
     print(data)
     data_file.write("%s\n" % data)
     data_file.close()
 
-    succes = "registro correcto"
+    succes = "Registro correcto"
     try:
         client.send(succes.encode('utf-8'))
     except socket.error as e:
@@ -26,23 +23,18 @@ def threaded(client):
             print(e)
         else:
             print("not EPIPE")
-            # Other error
     client.close()
 
-def thread_nodes():
+def thread_nodes(): #Funcion que maneja el thread encargado de responder al heartbeat
     multicast_group = '224.10.10.10'
     server_address = ('0.0.0.0', 10000)
 
-    # Create the socket
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     sock.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 
-    # Bind to the server address
     sock.bind(server_address)
 
-    # Tell the operating system to add the socket to
-    # the multicast group on all interfaces.
     group = socket.inet_aton(multicast_group)+socket.inet_aton("172.18.18.1") #Recibe de esta interfaz
     mreq = struct.pack('4sL', group, socket.INADDR_ANY)
     sock.setsockopt(
@@ -50,7 +42,6 @@ def thread_nodes():
         socket.IP_ADD_MEMBERSHIP,
         mreq)
 
-    # Receive/respond loop
     while True:
         print('\nwaiting to receive message')
         data, address = sock.recvfrom(1024)
@@ -61,10 +52,6 @@ def thread_nodes():
 
         print('sending acknowledgement to', address)
         sock.sendto('ack'.encode('utf-8'), address)
-        
-        #data, address = sock.recvfrom(1024)
-        #if(data):
-        #    print("Success")
 
 def Main():
     _thread.start_new_thread(thread_nodes, ())
@@ -80,7 +67,6 @@ def Main():
 
     while True:
         client, addrs = sock.accept()
-        #print_lock.acquire()
         print("Connected to: ", addrs[0], ":", addrs[1])
 
         _thread.start_new_thread(threaded, (client, ) )
