@@ -3,7 +3,7 @@ services:
   server:
     build:
       context: ./
-      dockerfile: Server.Ubuntu
+      dockerfile: Dockerfile.server
     container_name: server
     ports:
       - 8000:5000
@@ -16,7 +16,7 @@ services:
     tty: true
     build:
       context: ./
-      dockerfile: Cliente.Ubuntu
+      dockerfile: Dockerfile.cliente
     container_name: cliente_act1
     ports:
      - 8001:5000

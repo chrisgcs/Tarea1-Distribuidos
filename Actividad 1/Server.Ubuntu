@@ -1,7 +1,0 @@
-FROM ubuntu:latest
-
-RUN apt-get update \
-	&& apt-get -y install python3
-
-COPY . /usr/src/app
-CMD ["python3", "/usr/src/app/Server.py"]

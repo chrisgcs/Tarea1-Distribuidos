@@ -1,3 +1,6 @@
-FROM python:3-onbuild
-COPY . /usr/src/app
-CMD ["python", "headnode.py"]
+FROM ubuntu:latest
+
+RUN apt-get update \
+	&& apt-get -y install python3
+
+CMD ["python3", "/usr/src/app/headnode.py"]
